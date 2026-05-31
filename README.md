@@ -41,6 +41,33 @@ streamlit run ui/app.py
 python tests/test_<componente>.py
 ```
 
+## LangSmith
+
+El proyecto carga `.env` antes de importar LangChain/LangGraph y sincroniza
+`LANGSMITH_*` con las variables legacy `LANGCHAIN_*`.
+
+Para verificar que las trazas llegan:
+
+```powershell
+python scripts/check_langsmith.py
+```
+
+Despues abre LangSmith, entra en el workspace correcto y selecciona el proyecto
+`eurofinder` en Tracing.
+
+## Leboncoin
+
+Leboncoin puede bloquear peticiones con Datadome aunque Subito y Willhaben
+funcionen. El scraper intenta primero el endpoint API no oficial mediante
+`lbc` y despues el HTML antiguo. Si ambos devuelven 403, configura en `.env`:
+
+```powershell
+LEBONCOIN_PROXY_URL=http://usuario:password@host:puerto
+LEBONCOIN_IMPERSONATE=chrome146
+```
+
+Lo mas fiable suele ser un proxy residencial o movil de Francia.
+
 ## Estructura
 
 - `agents/` — extractor, planner, normalizer, translator
