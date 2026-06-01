@@ -77,11 +77,11 @@ VALORES_PAISES: tuple[str, ...] = ("FR", "DE", "IT", "ES")
 
 
 FILTROS_UNIVERSALES: tuple[FiltroDef, ...] = (
-    FiltroDef("precio_min", "Precio minimo (EUR)", "numero"),
-    FiltroDef("precio_max", "Precio maximo (EUR)", "numero"),
-    FiltroDef("paises_preferidos", "Paises preferidos", "lista_multi", VALORES_PAISES),
-    FiltroDef("paises_excluidos", "Paises excluidos", "lista_multi", VALORES_PAISES),
-    FiltroDef("estado", "Estado de conservacion", "lista", VALORES_ESTADO),
+    FiltroDef("precio_min", "Precio mínimo (EUR)", "numero"),
+    FiltroDef("precio_max", "Precio máximo (EUR)", "numero"),
+    FiltroDef("paises_preferidos", "Países preferidos", "lista_multi", VALORES_PAISES),
+    FiltroDef("paises_excluidos", "Países excluidos", "lista_multi", VALORES_PAISES),
+    FiltroDef("estado", "Estado de conservación", "lista", VALORES_ESTADO),
 )
 
 
@@ -94,10 +94,10 @@ _F_MODELO = FiltroDef("modelo", "Modelo", "texto")
 _F_TALLA = FiltroDef("talla", "Talla", "texto")
 _F_COLOR = FiltroDef("color", "Color", "texto")
 _F_MATERIAL = FiltroDef("material", "Material", "texto")
-_F_ANIO = FiltroDef("anio", "Anio", "numero")
-_F_ANIO_MIN = FiltroDef("anio_min", "Anio minimo", "numero")
-_F_ANIO_MAX = FiltroDef("anio_max", "Anio maximo", "numero")
-_F_KM_MAX = FiltroDef("km_max", "Kilometros maximo", "numero")
+_F_ANIO = FiltroDef("anio", "Año", "numero")
+_F_ANIO_MIN = FiltroDef("anio_min", "Año mínimo", "numero")
+_F_ANIO_MAX = FiltroDef("anio_max", "Año máximo", "numero")
+_F_KM_MAX = FiltroDef("km_max", "Kilómetros máximos", "numero")
 
 _COMBUSTIBLES: tuple[str, ...] = ("gasolina", "diesel", "hibrido", "electrico", "glp_gnc")
 _F_COMBUSTIBLE = FiltroDef("combustible", "Combustible", "lista", _COMBUSTIBLES)
@@ -120,9 +120,9 @@ _TIPO_COCHE = TipoProducto(
         _F_KM_MAX,
         _F_COMBUSTIBLE,
         FiltroDef("cambio", "Cambio", "lista", ("manual", "automatico")),
-        FiltroDef("potencia_min_cv", "Potencia minima (CV)", "numero"),
+        FiltroDef("potencia_min_cv", "Potencia mínima (CV)", "numero"),
         FiltroDef("puertas", "Puertas", "lista", ("2_3", "4_5")),
-        FiltroDef("carroceria", "Carroceria", "lista",
+        FiltroDef("carroceria", "Carrocería", "lista",
                   ("berlina", "familiar", "suv", "coupe", "cabrio", "monovolumen")),
     ),
 )
@@ -152,7 +152,7 @@ _TIPO_CARAVANA = TipoProducto(
 )
 
 _TIPO_EMBARCACION = TipoProducto(
-    clave="embarcacion_moto_agua", label="Embarcacion / moto de agua", rama_profunda=False,
+    clave="embarcacion_moto_agua", label="Embarcación / moto de agua", rama_profunda=False,
     filtros=(
         FiltroDef("tipo_barco", "Tipo", "lista", ("lancha", "velero", "moto_agua", "neumatica")),
         FiltroDef("eslora", "Eslora (m)", "numero"),
@@ -169,7 +169,7 @@ _TIPO_RECAMBIOS = TipoProducto(
 )
 
 _TIPO_ACC_VEHICULOS = TipoProducto(
-    clave="accesorios_vehiculos", label="Accesorios (neumaticos, navegadores...)",
+    clave="accesorios_vehiculos", label="Accesorios (neumáticos, navegadores...)",
     rama_profunda=False,
     filtros=(
         FiltroDef("marca_compatible", "Marca compatible", "texto"),
@@ -179,9 +179,9 @@ _TIPO_ACC_VEHICULOS = TipoProducto(
 
 
 CAT_VEHICULOS = CategoriaTax(
-    clave="vehiculos", label="Vehiculos",
+    clave="vehiculos", label="Vehículos",
     grupos=(
-        Grupo("vehiculos", "Vehiculos", (
+        Grupo("vehiculos", "Vehículos", (
             _TIPO_COCHE, _TIPO_MOTO, _TIPO_FURGONETA, _TIPO_CARAVANA, _TIPO_EMBARCACION,
         )),
         Grupo("piezas_accesorios", "Piezas y accesorios", (
@@ -222,8 +222,8 @@ _TIPO_RELOJ = TipoProducto(
                   ("automatico", "cuarzo", "manual")),
         FiltroDef("material_caja", "Material de la caja", "lista",
                   ("acero", "oro", "titanio", "ceramica", "chapado")),
-        FiltroDef("diametro_mm", "Diametro de caja (mm)", "numero"),
-        FiltroDef("genero", "Genero", "lista", ("hombre", "mujer", "unisex")),
+        FiltroDef("diametro_mm", "Diámetro de caja (mm)", "numero"),
+        FiltroDef("genero", "Género", "lista", ("hombre", "mujer", "unisex")),
         FiltroDef("con_caja_y_papeles", "Con caja y papeles", "lista",
                   ("si", "no", "solo_reloj")),
         _F_ANIO,
@@ -240,7 +240,7 @@ _TIPO_BOLSOS = TipoProducto(
 )
 
 _TIPO_JOYERIA = TipoProducto(
-    clave="joyeria", label="Joyeria", rama_profunda=False,
+    clave="joyeria", label="Joyería", rama_profunda=False,
     filtros=(
         FiltroDef("tipo_joyeria", "Tipo", "lista",
                   ("anillo", "collar", "pendientes", "pulsera")),
@@ -278,7 +278,7 @@ CAT_MODA = CategoriaTax(
 # --- 3. ELECTRONICA ---
 
 _TIPO_MOVIL = TipoProducto(
-    clave="movil", label="Movil / smartphone", rama_profunda=False,
+    clave="movil", label="Móvil / smartphone", rama_profunda=False,
     filtros=(
         _F_MARCA, _F_MODELO,
         FiltroDef("capacidad", "Capacidad (64GB, 256GB...)", "texto"),
@@ -287,7 +287,7 @@ _TIPO_MOVIL = TipoProducto(
 )
 
 _TIPO_PORTATIL = TipoProducto(
-    clave="portatil", label="Portatil", rama_profunda=False,
+    clave="portatil", label="Portátil", rama_profunda=False,
     filtros=(
         _F_MARCA,
         FiltroDef("procesador", "Procesador", "texto"),
@@ -315,7 +315,7 @@ _TIPO_TABLET = TipoProducto(
 )
 
 _TIPO_CAMARA = TipoProducto(
-    clave="camara_fotos", label="Camara de fotos", rama_profunda=False,
+    clave="camara_fotos", label="Cámara de fotos", rama_profunda=False,
     filtros=(
         _F_MARCA,
         FiltroDef("tipo_camara", "Tipo", "lista",
@@ -325,11 +325,11 @@ _TIPO_CAMARA = TipoProducto(
 )
 
 _TIPO_TV = TipoProducto(
-    clave="television", label="Television", rama_profunda=False,
+    clave="television", label="Televisión", rama_profunda=False,
     filtros=(
         _F_MARCA,
         FiltroDef("pulgadas", "Pulgadas", "numero"),
-        FiltroDef("resolucion", "Resolucion", "lista", ("hd", "4k", "8k")),
+        FiltroDef("resolucion", "Resolución", "lista", ("hd", "4k", "8k")),
     ),
 )
 
@@ -351,7 +351,7 @@ _TIPO_VIDEOJUEGO = TipoProducto(
     clave="videojuego", label="Videojuego", rama_profunda=False,
     filtros=(
         FiltroDef("plataforma_videojuego", "Plataforma", "texto"),
-        FiltroDef("titulo", "Titulo", "texto"),
+        FiltroDef("titulo", "Título", "texto"),
         FiltroDef("region", "Region", "lista", ("pal", "ntsc")),
     ),
 )
@@ -366,9 +366,9 @@ _TIPO_ACC_ELECTRONICA = TipoProducto(
 
 
 CAT_ELECTRONICA = CategoriaTax(
-    clave="electronica", label="Electronica",
+    clave="electronica", label="Electrónica",
     grupos=(
-        Grupo("informatica_telefonia", "Informatica y telefonia", (
+        Grupo("informatica_telefonia", "Informática y telefonía", (
             _TIPO_MOVIL, _TIPO_PORTATIL, _TIPO_SOBREMESA, _TIPO_TABLET,
         )),
         Grupo("imagen_sonido", "Imagen y sonido", (
@@ -391,7 +391,7 @@ _FILTROS_MUEBLE = (
     FiltroDef("plazas_o_dimensiones", "Plazas o dimensiones", "texto"),
 )
 
-_TIPO_SOFA = TipoProducto("sofa", "Sofa", False, _FILTROS_MUEBLE)
+_TIPO_SOFA = TipoProducto("sofa", "Sofá", False, _FILTROS_MUEBLE)
 _TIPO_MESA = TipoProducto("mesa", "Mesa", False, _FILTROS_MUEBLE)
 _TIPO_SILLA = TipoProducto("silla", "Silla", False, _FILTROS_MUEBLE)
 _TIPO_ARMARIO = TipoProducto("armario_almacenaje", "Armario / almacenaje", False, _FILTROS_MUEBLE)
@@ -399,14 +399,14 @@ _TIPO_ARMARIO = TipoProducto("armario_almacenaje", "Armario / almacenaje", False
 _FILTROS_ELECTRODOM = (
     _F_MARCA,
     FiltroDef("tipo", "Tipo", "texto"),
-    FiltroDef("eficiencia_energetica", "Eficiencia energetica", "texto"),
+    FiltroDef("eficiencia_energetica", "Eficiencia energética", "texto"),
 )
 
 _TIPO_ELECTRO_GRANDE = TipoProducto(
-    "electrodom_grandes", "Electrodomesticos grandes", False, _FILTROS_ELECTRODOM,
+    "electrodom_grandes", "Electrodomésticos grandes", False, _FILTROS_ELECTRODOM,
 )
 _TIPO_ELECTRO_PEQUE = TipoProducto(
-    "electrodom_pequenos", "Electrodomesticos pequenos", False, _FILTROS_ELECTRODOM,
+    "electrodom_pequenos", "Electrodomésticos pequeños", False, _FILTROS_ELECTRODOM,
 )
 
 _FILTROS_DECO_JARDIN = (
@@ -414,20 +414,20 @@ _FILTROS_DECO_JARDIN = (
     _F_MATERIAL,
 )
 
-_TIPO_DECORACION = TipoProducto("decoracion", "Decoracion", False, _FILTROS_DECO_JARDIN)
-_TIPO_JARDIN = TipoProducto("jardin_exterior", "Jardin y exterior", False, _FILTROS_DECO_JARDIN)
+_TIPO_DECORACION = TipoProducto("decoracion", "Decoración", False, _FILTROS_DECO_JARDIN)
+_TIPO_JARDIN = TipoProducto("jardin_exterior", "Jardín y exterior", False, _FILTROS_DECO_JARDIN)
 
 
 CAT_HOGAR = CategoriaTax(
-    clave="hogar_jardin", label="Hogar y jardin",
+    clave="hogar_jardin", label="Hogar y jardín",
     grupos=(
         Grupo("mobiliario", "Mobiliario", (
             _TIPO_SOFA, _TIPO_MESA, _TIPO_SILLA, _TIPO_ARMARIO,
         )),
-        Grupo("electrodomesticos", "Electrodomesticos", (
+        Grupo("electrodomesticos", "Electrodomésticos", (
             _TIPO_ELECTRO_GRANDE, _TIPO_ELECTRO_PEQUE,
         )),
-        Grupo("decoracion_jardin", "Decoracion y jardin", (
+        Grupo("decoracion_jardin", "Decoración y jardín", (
             _TIPO_DECORACION, _TIPO_JARDIN,
         )),
     ),
@@ -443,20 +443,20 @@ _TIPO_BICI = TipoProducto(
                   ("montana", "carretera", "urbana", "electrica", "bmx")),
         _F_MARCA,
         FiltroDef("talla_cuadro", "Talla de cuadro", "texto"),
-        FiltroDef("tamano_rueda", "Tamano de rueda", "texto"),
+        FiltroDef("tamano_rueda", "Tamaño de rueda", "texto"),
     ),
 )
 
 _FILTROS_MATERIAL_DEPORTIVO = (
     FiltroDef("deporte", "Deporte", "texto"),
     _F_MARCA,
-    FiltroDef("tipo_articulo", "Tipo de articulo", "texto"),
+    FiltroDef("tipo_articulo", "Tipo de artículo", "texto"),
 )
 
 _TIPO_FITNESS = TipoProducto("fitness_gimnasio", "Fitness y gimnasio", False, _FILTROS_MATERIAL_DEPORTIVO)
 _TIPO_EQUIPO = TipoProducto("deportes_equipo", "Deportes de equipo", False, _FILTROS_MATERIAL_DEPORTIVO)
 _TIPO_MONTANA_AGUA = TipoProducto(
-    "deportes_montana_agua", "Deportes de montana / agua", False, _FILTROS_MATERIAL_DEPORTIVO,
+    "deportes_montana_agua", "Deportes de montaña / agua", False, _FILTROS_MATERIAL_DEPORTIVO,
 )
 
 _TIPO_CAMPING = TipoProducto(
@@ -486,12 +486,12 @@ _TIPO_VINILO = TipoProducto(
     clave="vinilo", label="Vinilo", rama_profunda=True,
     filtros=(
         FiltroDef("artista", "Artista", "texto"),
-        FiltroDef("album", "Album / titulo", "texto"),
-        FiltroDef("sello", "Sello discografico", "texto"),
+        FiltroDef("album", "Álbum / título", "texto"),
+        FiltroDef("sello", "Sello discográfico", "texto"),
         _F_ANIO,
-        FiltroDef("pais_prensado", "Pais de prensado", "texto"),
+        FiltroDef("pais_prensado", "País de prensado", "texto"),
         FiltroDef("formato", "Formato", "lista", ("lp", "ep", "single", "box_set")),
-        FiltroDef("tamano", "Tamano", "lista", ("12", "10", "7")),
+        FiltroDef("tamano", "Tamaño", "lista", ("12", "10", "7")),
         FiltroDef("estado_disco", "Estado del disco (Goldmine)", "lista",
                   ("M", "NM", "VG+", "VG", "G")),
         FiltroDef("estado_portada", "Estado de la portada (Goldmine)", "lista",
@@ -503,25 +503,25 @@ _TIPO_CD = TipoProducto(
     clave="cd_casete", label="CD / casete", rama_profunda=False,
     filtros=(
         FiltroDef("artista", "Artista", "texto"),
-        FiltroDef("titulo", "Titulo", "texto"),
+        FiltroDef("titulo", "Título", "texto"),
         _F_ANIO,
     ),
 )
 
 _TIPO_COMIC = TipoProducto(
-    clave="comic_tebeo", label="Comic / tebeo", rama_profunda=False,
+    clave="comic_tebeo", label="Cómic / tebeo", rama_profunda=False,
     filtros=(
-        FiltroDef("titulo", "Titulo", "texto"),
-        FiltroDef("numero_comic", "Numero", "texto"),
+        FiltroDef("titulo", "Título", "texto"),
+        FiltroDef("numero_comic", "Número", "texto"),
         FiltroDef("editorial", "Editorial", "texto"),
         FiltroDef("idioma_publicacion", "Idioma", "texto"),
     ),
 )
 
 _TIPO_LIBRO_COL = TipoProducto(
-    clave="libro_coleccion", label="Libro de coleccion", rama_profunda=False,
+    clave="libro_coleccion", label="Libro de colección", rama_profunda=False,
     filtros=(
-        FiltroDef("titulo", "Titulo", "texto"),
+        FiltroDef("titulo", "Título", "texto"),
         FiltroDef("autor", "Autor", "texto"),
         FiltroDef("editorial", "Editorial", "texto"),
         _F_ANIO,
@@ -531,7 +531,7 @@ _TIPO_LIBRO_COL = TipoProducto(
 _TIPO_MONEDAS = TipoProducto(
     clave="monedas", label="Monedas", rama_profunda=False,
     filtros=(
-        FiltroDef("pais", "Pais", "texto"),
+        FiltroDef("pais", "País", "texto"),
         _F_ANIO,
         _F_MATERIAL,
     ),
@@ -540,17 +540,17 @@ _TIPO_MONEDAS = TipoProducto(
 _TIPO_SELLOS = TipoProducto(
     clave="sellos", label="Sellos", rama_profunda=False,
     filtros=(
-        FiltroDef("pais", "Pais", "texto"),
+        FiltroDef("pais", "País", "texto"),
         _F_ANIO,
-        FiltroDef("tematica", "Tematica", "texto"),
+        FiltroDef("tematica", "Temática", "texto"),
     ),
 )
 
 _TIPO_ANTIGUEDADES = TipoProducto(
-    clave="antiguedades", label="Antiguedades", rama_profunda=False,
+    clave="antiguedades", label="Antigüedades", rama_profunda=False,
     filtros=(
         FiltroDef("tipo", "Tipo", "texto"),
-        FiltroDef("epoca", "Epoca", "texto"),
+        FiltroDef("epoca", "Época", "texto"),
         _F_MATERIAL,
     ),
 )
@@ -558,7 +558,7 @@ _TIPO_ANTIGUEDADES = TipoProducto(
 _TIPO_CROMOS = TipoProducto(
     clave="cromos_cartas", label="Cromos / cartas coleccionables", rama_profunda=False,
     filtros=(
-        FiltroDef("coleccion", "Coleccion", "texto"),
+        FiltroDef("coleccion", "Colección", "texto"),
         FiltroDef("tipo", "Tipo", "texto"),
     ),
 )
@@ -567,9 +567,9 @@ _TIPO_CROMOS = TipoProducto(
 CAT_COLECCIONISMO = CategoriaTax(
     clave="coleccionismo_arte", label="Coleccionismo y arte",
     grupos=(
-        Grupo("musica_fisica", "Musica fisica", (_TIPO_VINILO, _TIPO_CD)),
-        Grupo("comics_libros", "Comics y libros", (_TIPO_COMIC, _TIPO_LIBRO_COL)),
-        Grupo("numismatica_filatelia", "Numismatica y filatelia", (
+        Grupo("musica_fisica", "Música física", (_TIPO_VINILO, _TIPO_CD)),
+        Grupo("comics_libros", "Cómics y libros", (_TIPO_COMIC, _TIPO_LIBRO_COL)),
+        Grupo("numismatica_filatelia", "Numismática y filatelia", (
             _TIPO_MONEDAS, _TIPO_SELLOS,
         )),
         Grupo("otros_coleccionables", "Otros coleccionables", (
@@ -588,14 +588,14 @@ _FILTROS_CUERDA = (
     FiltroDef("zurdo_diestro", "Zurdo o diestro", "lista", ("diestro", "zurdo")),
 )
 
-_TIPO_GUIT_ELEC = TipoProducto("guitarra_electrica", "Guitarra electrica", False, _FILTROS_CUERDA)
-_TIPO_GUIT_ACUS = TipoProducto("guitarra_acustica", "Guitarra acustica / clasica", False, _FILTROS_CUERDA)
+_TIPO_GUIT_ELEC = TipoProducto("guitarra_electrica", "Guitarra eléctrica", False, _FILTROS_CUERDA)
+_TIPO_GUIT_ACUS = TipoProducto("guitarra_acustica", "Guitarra acústica / clásica", False, _FILTROS_CUERDA)
 _TIPO_BAJO = TipoProducto("bajo", "Bajo", False, _FILTROS_CUERDA)
 _TIPO_OTRAS_CUERDAS = TipoProducto("otros_cuerda", "Otros (violin, ukelele...)", False, _FILTROS_CUERDA)
 
 _FILTROS_TECLADO = (
     _F_MARCA, _F_MODELO,
-    FiltroDef("numero_teclas", "Numero de teclas", "numero"),
+    FiltroDef("numero_teclas", "Número de teclas", "numero"),
 )
 
 _TIPO_PIANO = TipoProducto("piano_teclado", "Piano / teclado", False, _FILTROS_TECLADO)
@@ -607,7 +607,7 @@ _FILTROS_VIENTO_PERC = (
 )
 
 _TIPO_VIENTO = TipoProducto("viento", "Viento", False, _FILTROS_VIENTO_PERC)
-_TIPO_PERCUSION = TipoProducto("percusion_bateria", "Percusion / bateria", False, _FILTROS_VIENTO_PERC)
+_TIPO_PERCUSION = TipoProducto("percusion_bateria", "Percusión / batería", False, _FILTROS_VIENTO_PERC)
 
 _FILTROS_EQUIPO_MUSICA = (
     _F_MARCA, _F_MODELO,
@@ -635,14 +635,14 @@ CAT_INSTRUMENTOS = CategoriaTax(
 _FILTROS_ROPA_INFANTIL = (
     FiltroDef("edad_o_talla", "Talla o edad", "texto"),
     _F_MARCA,
-    FiltroDef("genero", "Genero", "lista", ("nino", "nina", "unisex")),
+    FiltroDef("genero", "Género", "lista", ("nino", "nina", "unisex")),
 )
 
 _TIPO_ROPA_BEBE = TipoProducto(
-    "ropa_bebe", "Ropa bebe (0-3 anos)", False, _FILTROS_ROPA_INFANTIL,
+    "ropa_bebe", "Ropa bebé (0-3 años)", False, _FILTROS_ROPA_INFANTIL,
 )
 _TIPO_ROPA_NINO = TipoProducto(
-    "ropa_nino", "Ropa nino (3-12 anos)", False, _FILTROS_ROPA_INFANTIL,
+    "ropa_nino", "Ropa niño (3-12 años)", False, _FILTROS_ROPA_INFANTIL,
 )
 
 _TIPO_JUGUETES = TipoProducto(
@@ -673,7 +673,7 @@ _TIPO_MOBI_INFANTIL = TipoProducto(
 
 
 CAT_NINOS = CategoriaTax(
-    clave="ninos_bebes", label="Ninos y bebes",
+    clave="ninos_bebes", label="Niños y bebés",
     grupos=(
         Grupo("ropa_infantil", "Ropa infantil", (_TIPO_ROPA_BEBE, _TIPO_ROPA_NINO)),
         Grupo("juguetes", "Juguetes", (_TIPO_JUGUETES,)),

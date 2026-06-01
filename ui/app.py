@@ -8,6 +8,7 @@ eligen jerarquicamente, y al elegir tipo aparecen sus filtros propios.
 from __future__ import annotations
 
 import asyncio
+import html
 import logging
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -67,6 +68,404 @@ logger = logging.getLogger("ui.app")
 st.set_page_config(page_title="Eurofinder", page_icon=":mag:", layout="wide")
 
 
+def _inject_global_styles() -> None:
+    """Aplica una capa visual sobria sin cambiar componentes ni estado."""
+    st.markdown(
+        """
+        <style>
+        :root {
+            --bg: #07112c;
+            --bg-elevated: #0c1a3d;
+            --bg-deep: #050b1d;
+            --surface: rgba(255, 255, 255, 0.045);
+            --surface-hover: rgba(255, 255, 255, 0.075);
+            --border: rgba(255, 255, 255, 0.10);
+            --border-strong: rgba(255, 255, 255, 0.18);
+            --border-gold: rgba(245, 200, 66, 0.38);
+            --text: #f1ecdc;
+            --text-muted: #9ba6c5;
+            --text-dim: #6a7593;
+            --gold: #f5c842;
+            --gold-hover: #fad366;
+            --gold-faint: rgba(245, 200, 66, 0.12);
+            --gold-glow: rgba(245, 200, 66, 0.25);
+            --font-serif: Georgia, "Times New Roman", serif;
+            --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: "Cascadia Mono", "Consolas", monospace;
+        }
+
+        .stApp {
+            background:
+                radial-gradient(1100px 580px at 12% -10%, rgba(245, 200, 66, 0.08), transparent 60%),
+                radial-gradient(900px 600px at 95% 8%, rgba(70, 100, 200, 0.13), transparent 60%),
+                var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+        }
+
+        [data-testid="stAppViewContainer"] > .main .block-container {
+            max-width: 1240px;
+            padding: 1.6rem 2rem 4rem;
+        }
+
+        .eurofinder-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 4.2rem;
+        }
+
+        .eurofinder-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .eurofinder-mark {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border-gold);
+            border-radius: 50%;
+            background: var(--gold-faint);
+            color: var(--gold);
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+        }
+
+        .eurofinder-brand-name {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: var(--text);
+            letter-spacing: 0;
+        }
+
+        .eurofinder-brand-name em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .eurofinder-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-family: var(--font-mono);
+            color: var(--text-dim);
+            font-size: 0.68rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .eurofinder-live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .eurofinder-hero {
+            max-width: 820px;
+            margin: 0 auto 1.25rem;
+            text-align: center;
+        }
+
+        .eurofinder-title {
+            font-family: var(--font-serif);
+            color: var(--text);
+            font-size: clamp(2.15rem, 4.5vw, 3rem);
+            font-weight: 300;
+            line-height: 1.05;
+            letter-spacing: 0;
+            margin: 0;
+        }
+
+        .eurofinder-title em {
+            color: var(--gold);
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .eurofinder-byline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.9rem;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .eurofinder-platforms {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 0.75rem 0 1.05rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .platform-list {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .mini-flag {
+            width: 18px;
+            height: 12px;
+            border-radius: 2px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+            overflow: hidden;
+            display: inline-grid;
+        }
+
+        .flag-fr {
+            background: linear-gradient(90deg, #0055a4 0 33.33%, #fff 33.33% 66.66%, #ef4135 66.66%);
+        }
+
+        .flag-it {
+            background: linear-gradient(90deg, #008c45 0 33.33%, #fff 33.33% 66.66%, #cd212a 66.66%);
+        }
+
+        .flag-at {
+            background: linear-gradient(180deg, #ed2939 0 33.33%, #fff 33.33% 66.66%, #ed2939 66.66%);
+        }
+
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input,
+        div[data-baseweb="select"] > div {
+            background-color: var(--bg-deep);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+        }
+
+        div[data-testid="stTextInput"] input:focus,
+        div[data-testid="stNumberInput"] input:focus {
+            border-color: var(--border-gold);
+            box-shadow: 0 0 0 4px rgba(245, 200, 66, 0.08);
+        }
+
+        div[data-testid="stTextInput"] input::placeholder {
+            color: var(--text-dim);
+        }
+
+        label,
+        div[data-testid="stWidgetLabel"] p {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+        }
+
+        div[data-testid="stButton"] button[kind="primary"] {
+            background: var(--gold);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            color: #1a1305;
+            font-weight: 650;
+            min-height: 2.9rem;
+            padding-left: 1.8rem;
+            padding-right: 1.8rem;
+        }
+
+        div[data-testid="stButton"] button[kind="primary"] p {
+            color: #1a1305;
+            font-weight: 650;
+        }
+
+        div[data-testid="stButton"] button[kind="primary"]:hover {
+            background: var(--gold-hover);
+            border-color: var(--gold-hover);
+            color: #1a1305;
+        }
+
+        div[data-testid="stAlert"] {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-muted);
+        }
+
+        div[data-testid="stExpander"] {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: none;
+        }
+
+        div[data-testid="stExpander"] summary {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: none;
+            padding: 1rem;
+            transition: background 160ms ease, border-color 160ms ease;
+        }
+
+        div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-strong);
+        }
+
+        div[data-testid="stVerticalBlockBorderWrapper"] h3 {
+            color: var(--text);
+            font-family: var(--font-serif);
+            font-size: 1.35rem;
+            font-weight: 400;
+            line-height: 1.25;
+            margin-bottom: 0.45rem;
+        }
+
+        div[data-testid="stVerticalBlockBorderWrapper"] img {
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            object-fit: cover;
+        }
+
+        div[data-testid="stMarkdownContainer"] strong {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        div[data-testid="stMarkdownContainer"] p,
+        div[data-testid="stCaptionContainer"] {
+            color: var(--text-muted);
+        }
+
+        a[data-testid="stLinkButton"] {
+            background: transparent;
+            border-radius: 10px;
+            border-color: var(--border-gold);
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        a[data-testid="stLinkButton"]:hover {
+            border-color: var(--gold);
+            color: #1a1305;
+            background: var(--gold);
+        }
+
+        hr {
+            border-color: var(--border);
+        }
+
+        .eurofinder-footer {
+            margin-top: 4rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-family: var(--font-mono);
+            color: var(--text-dim);
+            font-size: 0.66rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .eurofinder-footer b {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        @media (max-width: 700px) {
+            [data-testid="stAppViewContainer"] > .main .block-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .eurofinder-header {
+                margin-bottom: 2.8rem;
+            }
+
+            .eurofinder-title {
+                font-size: 2.15rem;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _render_header() -> None:
+    st.markdown(
+        """
+        <header class="eurofinder-header">
+            <div class="eurofinder-brand">
+                <div class="eurofinder-mark">★</div>
+                <div class="eurofinder-brand-name">Euro<em>finder</em></div>
+            </div>
+            <div class="eurofinder-live">
+                <span class="eurofinder-live-dot"></span>
+                En vivo
+            </div>
+        </header>
+        <section class="eurofinder-hero">
+            <h1 class="eurofinder-title">Busca lo que deseas por <em>toda Europa</em>.</h1>
+            <div class="eurofinder-byline">
+                <span class="eurofinder-live-dot"></span>
+                Impulsado por IA
+            </div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _render_platform_meta() -> None:
+    st.markdown(
+        """
+        <div class="eurofinder-platforms">
+            <div class="platform-list">
+                <span class="platform-chip"><span class="mini-flag flag-fr"></span> Leboncoin</span>
+                <span class="platform-chip"><span class="mini-flag flag-it"></span> Subito</span>
+                <span class="platform-chip"><span class="mini-flag flag-at"></span> Willhaben</span>
+            </div>
+            <span>Filtros opcionales disponibles</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _render_footer() -> None:
+    st.markdown(
+        """
+        <footer class="eurofinder-footer">
+            <span><b>Eurofinder</b></span>
+            <span>Búsqueda europea de segunda mano</span>
+        </footer>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Ejecucion del grafo
 # ---------------------------------------------------------------------------
@@ -114,10 +513,10 @@ def _render_tarjeta(r: NormalizedListing) -> None:
     with st.container(border=True):
         col_img, col_txt = st.columns([1, 3], vertical_alignment="top")
         with col_img:
-            st.image(r.thumbnail_url or PLACEHOLDER_IMG, use_container_width=True)
+            st.image(r.thumbnail_url or PLACEHOLDER_IMG, width="stretch")
         with col_txt:
-            titulo = r.titulo_es or r.titulo or "(sin titulo)"
-            st.markdown(f"### {titulo}")
+            titulo = r.titulo_es or r.titulo or "(sin título)"
+            st.markdown(f"### {html.escape(titulo)}")
             if r.titulo_es and r.titulo and r.titulo_es != r.titulo:
                 st.caption(f"Original: {r.titulo}")
 
@@ -143,8 +542,8 @@ def _render_tarjeta(r: NormalizedListing) -> None:
 def _render_resultados(resultados: list[NormalizedListing]) -> None:
     if not resultados:
         st.warning(
-            "No se han encontrado anuncios. Prueba aflojando algun filtro "
-            "(ampliar precio, quitar talla/color, cambiar tipo o categoria)."
+            "No se han encontrado anuncios. Prueba aflojando algún filtro "
+            "(ampliar precio, quitar talla/color, cambiar tipo o categoría)."
         )
         return
 
@@ -152,7 +551,7 @@ def _render_resultados(resultados: list[NormalizedListing]) -> None:
     for r in resultados:
         desglose[r.plataforma] = desglose.get(r.plataforma, 0) + 1
     detalle = " - ".join(f"{k}: {v}" for k, v in sorted(desglose.items()))
-    st.markdown(f"**{len(resultados)} resultados** ordenados por precio asc.")
+    st.markdown(f"**{len(resultados)} resultados encontrados**")
     st.caption(detalle)
 
     for r in resultados:
@@ -294,7 +693,7 @@ def _render_filtro(fd: FiltroDef) -> None:
 def _render_expander_filtros() -> None:
     with st.expander("Filtros (ampliar para ajustar a mano)", expanded=False):
 
-        # --- Nivel 1: categoria ---
+        # --- Nivel 1: categoría ---
         cat_claves = [c.clave for c in TAXONOMIA]
         cat_labels = {c.clave: c.label for c in TAXONOMIA}
         actual_cat = st.session_state.get("f_categoria") or cat_claves[0]
@@ -302,11 +701,11 @@ def _render_expander_filtros() -> None:
             actual_cat = cat_claves[0]
         idx_cat = cat_claves.index(actual_cat)
         st.selectbox(
-            "Categoria", cat_claves, index=idx_cat, key="f_categoria",
+            "Categoría", cat_claves, index=idx_cat, key="f_categoria",
             format_func=lambda k: cat_labels.get(k, k),
         )
 
-        # --- Nivel 2: grupo (depende de la categoria) ---
+        # --- Nivel 2: grupo (depende de la categoría) ---
         grupos = claves_grupo(st.session_state["f_categoria"])
         cat_obj: CategoriaTax | None = buscar_categoria(st.session_state["f_categoria"])
         grupo_labels: dict[str, str] = {}
@@ -375,11 +774,8 @@ def _render_expander_filtros() -> None:
                 _, _, tipo_obj = encontrado
                 if tipo_obj.filtros:
                     st.markdown("---")
-                    st.markdown(
-                        f"**Filtros de {tipo_obj.label}"
-                        + (" (RAMA PROFUNDA)" if tipo_obj.rama_profunda else "")
-                        + "**"
-                    )
+                    sufijo = " (rama profunda)" if tipo_obj.rama_profunda else ""
+                    st.markdown(f"**Filtros de {tipo_obj.label}{sufijo}**")
                     for fd in tipo_obj.filtros:
                         _render_filtro(fd)
 
@@ -402,26 +798,27 @@ def _hay_algun_filtro_no_universal(f: SearchFilters) -> bool:
 
 
 def main() -> None:
+    _inject_global_styles()
     _init_session()
     # Si la ultima busqueda dejo filtros nuevos del LLM pendientes de pintar,
     # los aplicamos aqui ANTES de instanciar cualquier widget.
     _aplicar_volcado_pendiente()
 
-    st.title("Eurofinder")
-    st.caption(
-        "Buscador de productos de segunda mano en plataformas europeas. "
-        "Escribe en espanol; los resultados se traducen automaticamente."
-    )
+    _render_header()
 
-    st.text_input(
-        "Que buscas?",
-        key="query_texto",
-        placeholder="ej. Rolex Day-Date oro automatico, Audi A5 diesel automatico <15000, chaqueta Prada cuero hombre L...",
-    )
+    col_query, col_submit = st.columns([5, 1], vertical_alignment="bottom")
+    with col_query:
+        st.text_input(
+            "¿Qué buscas?",
+            key="query_texto",
+            placeholder="Ej. Rolex Day-Date oro automático, Audi A5 diésel automático <15000, chaqueta Prada cuero hombre L...",
+        )
+    with col_submit:
+        submitted = st.button("Buscar", type="primary", use_container_width=True)
+
+    _render_platform_meta()
 
     _render_expander_filtros()
-
-    submitted = st.button("Buscar", type="primary")
 
     if submitted:
         query = (st.session_state.get("query_texto") or "").strip()
@@ -431,7 +828,7 @@ def main() -> None:
         hay_filtros = _hay_algun_filtro_no_universal(filtros_form)
 
         if not query and not hay_filtros:
-            st.error("Escribe una busqueda o ajusta filtros antes de pulsar Buscar.")
+            st.error("Escribe una búsqueda o ajusta filtros antes de pulsar Buscar.")
         else:
             with st.spinner("Buscando en plataformas europeas..."):
                 try:
@@ -459,7 +856,7 @@ def main() -> None:
                         }
                     resultados, filtros_finales = _ejecutar(estado_inicial)
                 except Exception as exc:
-                    st.error(f"Error ejecutando la busqueda: {exc}")
+                    st.error(f"Error ejecutando la búsqueda: {exc}")
                     return
 
             st.session_state["resultados"] = resultados
@@ -473,7 +870,9 @@ def main() -> None:
     if st.session_state.get("resultados") is not None:
         _render_resultados(st.session_state["resultados"])
     else:
-        st.info("Escribe una busqueda y pulsa **Buscar** para empezar.")
+        st.info("Escribe una búsqueda y pulsa **Buscar** para empezar.")
+
+    _render_footer()
 
 
 main()
