@@ -15,6 +15,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from schemas.models import SearchFilters
+from schemas.security import sanear_query
 from schemas.taxonomia import (
     FILTROS_UNIVERSALES,
     buscar_tipo,
@@ -159,6 +160,7 @@ async def extraer_filtros(query: str) -> SearchFilters:
     `cache_control: ephemeral` para que Anthropic lo cachee 5 min y la 2a
     llamada hit-eada cueste ~10% del tiempo.
     """
+    query = sanear_query(query)
     llm = _llm().with_structured_output(SearchFilters)
     mensajes = [
         SystemMessage(

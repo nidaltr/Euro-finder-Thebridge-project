@@ -42,6 +42,7 @@ import streamlit as st
 
 from graph.workflow import build_graph
 from schemas.models import NormalizedListing, SearchFilters
+from schemas.security import sanear_query
 from schemas.taxonomia import (
     CategoriaTax,
     FILTROS_UNIVERSALES,
@@ -653,7 +654,7 @@ def _construir_filtros_desde_session() -> SearchFilters:
     categoria = st.session_state.get("f_categoria") or "otros"
     grupo = st.session_state.get("f_grupo") or None
     tipo_producto = st.session_state.get("f_tipo_producto") or None
-    query_texto = (st.session_state.get("query_texto") or "").strip()
+    query_texto = sanear_query(st.session_state.get("query_texto") or "")
 
     return SearchFilters(
         categoria=categoria,
@@ -821,7 +822,7 @@ def main() -> None:
     _render_expander_filtros()
 
     if submitted:
-        query = (st.session_state.get("query_texto") or "").strip()
+        query = sanear_query(st.session_state.get("query_texto") or "")
         filtros_form = _construir_filtros_desde_session()
 
         cambio_query = bool(query) and query != st.session_state.get("ultima_query_extraida")

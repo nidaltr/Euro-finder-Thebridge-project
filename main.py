@@ -16,6 +16,7 @@ from observability import (
 configure_langsmith()
 
 from graph.workflow import build_graph
+from schemas.security import sanear_query
 
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -32,9 +33,9 @@ async def run(query: str) -> None:
 
 def main() -> None:
     if len(sys.argv) > 1:
-        query = " ".join(sys.argv[1:])
+        query = sanear_query(" ".join(sys.argv[1:]))
     else:
-        query = input("Query: ").strip()
+        query = sanear_query(input("Query: "))
     if not query:
         print("Query vacia, saliendo.")
         return
